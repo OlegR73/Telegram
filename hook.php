@@ -1,8 +1,10 @@
 <?php
+// session_start();
 // 1) Ваш токен и базовый URL API
 define('BOT_TOKEN', 'ВАШ_ТОКЕН_ОТ_BOTFATHER');
 define('API_URL', 'https://api.telegram.org/bot'.BOT_TOKEN.'/');
-
+// session_unset();
+// session_destroy();
 // 2) Читаем «сырое» тело POST и декодируем JSON
 $update = json_decode(file_get_contents('php://input'), true);
 

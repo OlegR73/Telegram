@@ -47,9 +47,9 @@ function AI_assistant($question){
 }
 
 
-function botMessage($chat_id, $reply){
+function botMessage($api_url, $chat_id, $reply){
     file_get_contents(
-        API_URL
+        $api_url
     . "sendMessage?chat_id={$chat_id}"
     . "&text=" . urlencode($reply)
     );     
