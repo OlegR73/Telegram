@@ -1,8 +1,8 @@
 <?php 
-session_start();
+//session_start();
 include "key.php";
 //echo $openai_api_key;
-$question = 'WHo are you?';
+$question = 'WHAT IS CRIPTOCURRENCY?';
 function AI_assistant($openai_api_key, $question){
     $prompt = '';
     if (!isset($_SESSION['chat_history']) ) {
@@ -58,16 +58,18 @@ function AI_assistant($openai_api_key, $question){
         return 'No answer';
     }
 
-    echo "<pre>";
-    print_r($json ); 
-    echo "</pre>";
+    // echo "<pre>";
+    // print_r($json ); 
+    // echo "</pre>";
 
 
 }
 
-echo AI_assistant($openai_api_key, $question);
+//echo AI_assistant($openai_api_key, $question);
 
 
-
+// # Устанавливаем Webhook на ваш hook.php
+// curl "https://api.telegram.org/bot8091712566:AAE1wGuRPd8xvx7L1AYAIgxaTq7Hi-5DyBM/setWebhook?url=https://trbot.eu/Telegram/hook.php"
+// https://trbot.eu/
 
 ?>

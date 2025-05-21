@@ -41,12 +41,6 @@ function queryExecute($conn, $sql, $trToSearch){
     }   
 }
 
-
-function AI_assistant($question){
-    return $question; 
-}
-
-
 function botMessage($api_url, $chat_id, $reply){
     file_get_contents(
         $api_url
