@@ -49,5 +49,19 @@ function botMessage($api_url, $chat_id, $reply){
     );     
 }
 
-
+function insertVisitor(mysqli $conn, int $chat_id, string $username, string $command): bool{
+    $sql = "INSERT INTO visits (chat_id, username, command) VALUES (?,?,?)";
+    $stmt = $conn->prepare($sql);
+    if (!$stmt) {
+         error_log("Prepare failed: " . $conn->error);
+         return false;
+    }
+    $stmt->bind_param('iss', $chat_id, $username, $command);
+    if(!$stmt->execute()){
+        error_log("Execute failed: " . $stmt->error);
+        return false;
+    };
+    $stmt->close();
+    return true;
+}
 ?>

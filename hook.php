@@ -1,25 +1,17 @@
 <?php
+include __DIR__ . '/init.php';
 ini_set('display_errors', 1);
 ini_set('display_startup_errors', 1);
 error_reporting(E_ALL);
 ini_set('log_errors', 1);
 ini_set('error_log', __DIR__ . '/php-error.log');
 
-// if (!file_exists(__DIR__.'/d_base/db_connection.php')) {
-//     error_log("db_connection.php");
-//     http_response_code(200);
-//     exit;
-// }
 
 include "d_base/db_connection.php";
 include "api_openai.php";
 include "func.php";
 include "d_base/db_func.php";
 
-           
-//session_start();
-// session_unset();
-// session_destroy();
 define('BOT_TOKEN', '8196569644:AAGRQG5NZhSquAI5vtRVkbkD5-QfHhnBRqg');
 define('API_URL', 'https://api.telegram.org/bot'.BOT_TOKEN.'/');
 
@@ -41,7 +33,7 @@ file_put_contents(__DIR__.'/hook.log', date('c')."  ".$payload.PHP_EOL, FILE_APP
             $currentState = getState($conn, $chat_id);
       
             if ($currentState !== null && mb_substr($text, 0, 1) !== '/') {
-                // обрабатываем как название книги
+
                  if ($currentState == 'book') {
 
                        $reply = getBook($conn, $text);
@@ -70,41 +62,56 @@ file_put_contents(__DIR__.'/hook.log', date('c')."  ".$payload.PHP_EOL, FILE_APP
 
             switch ($text) {
                 case '/start':
-                    $reply = "Привет! Я — ваш PHP-бот для Telegram.";
+                    $username = $update['message']['from']['first_name'];
+                    insertVisitor($conn, $chat_id, $username, 'start');
+                    $reply = "Welcom! I am — your PHP-bot for Telegram.";
                     botMessage(API_URL, $chat_id, $reply);
                     break;
                 case '/help':
+                    $username = $update['message']['from']['first_name'];
+                    insertVisitor($conn, $chat_id, $username, 'help');
                     $reply = "Available commands:\n/start — WELCOME\n/help — help\n/ai - Ask AI assistant\n/search_by_book  — Ask about book in Library\n/search_by_author  — Ask about author in Library\n/stop  — Stop action" ;
                     botMessage(API_URL, $chat_id, $reply);
                     break;
-                case '/stop':
+                case '/stop':                                      
+                    $username = $update['message']['from']['first_name'];
+                    insertVisitor($conn, $chat_id, $username, 'stop');
+                    unset($_SESSION['chat_history']);
                     clearState($conn, $chat_id);
                     $reply = "Stoped.";
                     botMessage(API_URL, $chat_id, $reply);
                     break;
                 case '/ai':
+                    $username = $update['message']['from']['first_name'];
+                    insertVisitor($conn, $chat_id, $username, 'ai');
                     setState($conn, $chat_id, 'assistant');
                     $reply = 'Enter question or /stop';
                     botMessage(API_URL, $chat_id, $reply);
                     break;
                 case '/search_by_book':
+                    $username = $update['message']['from']['first_name'];
+                    insertVisitor($conn, $chat_id, $username, 'books');
                     setState($conn, $chat_id, 'book');
                     $reply = "Enter book title or /stop";
                     botMessage(API_URL, $chat_id, $reply);
                     break;
                 case '/search_by_author':
+                    $username = $update['message']['from']['first_name'];
+                    insertVisitor($conn, $chat_id, $username, 'authors');
                     setState($conn, $chat_id, 'author');
                     $reply = "Enter author name or /stop";
                     botMessage(API_URL, $chat_id, $reply);
                     break;
-                default:
+                default:                                    
+                    $username = $update['message']['from']['first_name'];
+                    insertVisitor($conn, $chat_id, $username, 'default');
                     $reply = "Do not understand command. Write /help.";
                     botMessage(API_URL, $chat_id, $reply);
             }
 
 //}
 
-   
+
 http_response_code(200);
 
 ?>
