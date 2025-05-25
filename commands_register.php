@@ -6,6 +6,7 @@ $commands = [
     ['command' => 'start',  'description' => 'Welcome'],
     ['command' => 'help',   'description' => 'help'],
     ['command' => 'ai',     'description' => 'Ask AI assistant'],
+    ['command' => 'cripto',     'description' => 'cripto prices'],
     ['command' => 'search_by_book',   'description' => 'Ask about book in Library'],
     ['command' => 'search_by_author', 'description' => 'Ask about author in Library'],
     ['command' => 'stop',   'description' => 'Stop actions'],

@@ -9,6 +9,7 @@ ini_set('error_log', __DIR__ . '/php-error.log');
 
 include "d_base/db_connection.php";
 include "api_openai.php";
+include "api_cripto.php";
 include "func.php";
 include "d_base/db_func.php";
 
@@ -38,23 +39,24 @@ file_put_contents(__DIR__.'/hook.log', date('c')."  ".$payload.PHP_EOL, FILE_APP
 
                        $reply = getBook($conn, $text);
                         botMessage(API_URL, $chat_id, $reply);
-                            // предлагаем ещё или ждём /stop 
+                            // wait next question or/stop
                         botMessage(API_URL, $chat_id, "Enter book title or /stop");
           
 
                  }elseif($currentState == 'author'){
                         $reply = getAuthor($conn, $text);
                         botMessage(API_URL, $chat_id, $reply);
-                            // предлагаем ещё или ждём /stop
+                            // wait next question or/stop
                         botMessage(API_URL, $chat_id, "Enter author name or /stop");
-               
-
                  }elseif($currentState == 'assistant'){
                         $reply = AI_assistant($openai_api_key, $text);
                         botMessage(API_URL, $chat_id, $reply);
-                        // предлагаем ещё или ждём /stop
-                        botMessage(API_URL, $chat_id, "Enter question to assistant or /stop");
-         
+                        // wait next question or/stop
+                        botMessage(API_URL, $chat_id, "Enter question to assistant or /stop");         
+                }elseif($currentState == 'cripto'){
+                        // botMessage(API_URL, $chat_id, $reply);
+                        //  wait next question or/stop
+                        // botMessage(API_URL, $chat_id, "Enter question to assistant or /stop");
                 }
                 http_response_code(200);
                 exit;
@@ -64,13 +66,13 @@ file_put_contents(__DIR__.'/hook.log', date('c')."  ".$payload.PHP_EOL, FILE_APP
                 case '/start':
                     $username = $update['message']['from']['first_name'];
                     insertVisitor($conn, $chat_id, $username, 'start');
-                    $reply = "Welcom! I am — your PHP-bot for Telegram.";
+                    $reply = "HELLO, ". $username ."! I am — your PHP-bot for Telegram.";
                     botMessage(API_URL, $chat_id, $reply);
                     break;
                 case '/help':
                     $username = $update['message']['from']['first_name'];
                     insertVisitor($conn, $chat_id, $username, 'help');
-                    $reply = "Available commands:\n/start — WELCOME\n/help — help\n/ai - Ask AI assistant\n/search_by_book  — Ask about book in Library\n/search_by_author  — Ask about author in Library\n/stop  — Stop action" ;
+                    $reply = "Available commands:\n/start — HELLO, ". $username ."\n/help — help\n/ai - Ask AI assistant\n/search_by_book  — Ask about book in Library\n/search_by_author  — Ask about author in Library\n/stop  — Stop action" ;
                     botMessage(API_URL, $chat_id, $reply);
                     break;
                 case '/stop':                                      
@@ -86,6 +88,13 @@ file_put_contents(__DIR__.'/hook.log', date('c')."  ".$payload.PHP_EOL, FILE_APP
                     insertVisitor($conn, $chat_id, $username, 'ai');
                     setState($conn, $chat_id, 'assistant');
                     $reply = 'Enter question or /stop';
+                    botMessage(API_URL, $chat_id, $reply);
+                    break;
+                case '/cripto':
+                    $username = $update['message']['from']['first_name'];
+                    insertVisitor($conn, $chat_id, $username, 'cripto');
+                    //setState($conn, $chat_id, 'cripto');
+                    $reply = getCripto($crypto_api_key);
                     botMessage(API_URL, $chat_id, $reply);
                     break;
                 case '/search_by_book':

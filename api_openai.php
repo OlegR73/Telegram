@@ -1,8 +1,7 @@
 <?php 
 require __DIR__ . '/init.php';
 include "key.php";
-//echo $openai_api_key;
-$question = 'WHAT IS CRIPTOCURRENCY?';
+
 function AI_assistant($openai_api_key, $question){
     $prompt = 'You are a helpful assistant.';
     if (!isset($_SESSION['chat_history']) ) {

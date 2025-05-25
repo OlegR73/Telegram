@@ -12,9 +12,9 @@ function setState(mysqli $conn, int $chat_id, string $state): void {
     $stmt->close();
 }
 
-/**
- * Возвращает текущее состояние чата или null
- */
+
+// returns current chat state or null
+
 function getState(mysqli $conn, int $chat_id): ?string {
     $sql = "SELECT state FROM user_states WHERE chat_id = ?";
     $stmt = $conn->prepare($sql);

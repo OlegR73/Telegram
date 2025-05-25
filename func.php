@@ -64,4 +64,8 @@ function insertVisitor(mysqli $conn, int $chat_id, string $username, string $com
     $stmt->close();
     return true;
 }
+
+function compareCoin(array $allCoins, array $selectedCoins): bool{
+   return true;
+}
 ?>
